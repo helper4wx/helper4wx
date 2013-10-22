@@ -298,7 +298,6 @@ $("#wx_helper_box").remove();
             console.log("exec complete!");
         } else {
             var task = H.taskList.pop();
-            debugger;
             H.send(task.username, task.text).done(H.exec);
         }
     };
