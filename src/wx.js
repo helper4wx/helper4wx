@@ -153,8 +153,9 @@ $("#wx_helper_box").remove();
 
         function buildTr(addr) {
             var s = '<tr><td>';
-            s += '<input type="checkbox" username="' + addr.username + '" nickname="' + addr.nickname + '"></td>';
-            s += '<td>' + addr.nickname + '</td></tr>';
+            s += '<label><input type="checkbox" username="' + addr.username + '" nickname="' + addr.nickname + '">';
+            s += addr.nickname + '</label>';
+            s += '</td></tr>';
             return s;
         }
 
@@ -297,7 +298,8 @@ $("#wx_helper_box").remove();
             console.log("exec complete!");
         } else {
             var task = H.taskList.pop();
-            H.send(task.username, task.text).done(H.exec);
+            debugger;
+            H.send(task.username, task.text).done(H.exec));
         }
     };
 
