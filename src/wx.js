@@ -299,7 +299,7 @@ $("#wx_helper_box").remove();
         } else {
             var task = H.taskList.pop();
             debugger;
-            H.send(task.username, task.text).done(H.exec));
+            H.send(task.username, task.text).done(H.exec);
         }
     };
 
