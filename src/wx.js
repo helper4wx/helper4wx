@@ -294,7 +294,7 @@ $("#wx_helper_box").remove();
     };
 
     H.exec = function() {
-        if (H.taskList === 0) {
+        if (H.taskList.length === 0) {
             console.log("exec complete!");
         } else {
             var task = H.taskList.pop();
