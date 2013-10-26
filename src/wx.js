@@ -57,28 +57,23 @@ $("#wx_helper_box").remove();
         function readAddr() {
             var sets = $("#contactListContainer div.groupDetail").toArray();
             var addrs;
-            if (sets.length > 0) {
-                var friends_set = sets.pop();
-                addrs = $(friends_set).find("a.friendDetail");
+            for (var i = 0; i < sets.length; i++) {
+                var setType = getSetType(i, sets[i]);
+                addrs = $(sets[i]).find("a.friendDetail");
                 addrs.each(function(idx, el) {
-                    H.addrList.friends.push(buildAddr(el));
+                    H.addrList[setType].push(buildAddr(el));
                 });
             }
-            for (var i = 0; i < sets.length; i++) {
-                var set = sets[i];
-                addrs = $(set).find("a.friendDetail");
-                if (addrs.length > 0) {
-                    var firstName = $(addrs[0]).attr("username");
-                    if (firstName.indexOf("@chatroom") > 0) {
-                        addrs.each(function(idx, el) {
-                            H.addrList.groups.push(buildAddr(el));
-                        });
-                    } else {
-                        addrs.each(function(idx, el) {
-                            H.addrList.publics.push(buildAddr(el));
-                        });
-                    }
-                }
+        }
+
+        function getSetType(idx, set) {
+            var setTitle = $(set).prev().text().trim();
+            if(setTitle == "群组"){
+                return "groups";
+            }else if(setTitle == "公众账号"){
+                return "publics";
+            }else{
+                return "friends";
             }
         }
 
