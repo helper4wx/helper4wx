@@ -6,7 +6,7 @@ $("#mask").hide();
 
 (function(H, $) {
 	H.boxHTML = '<div><button id="wxh_show" style="float:left">群发助手</button><button id="wxh_hide" style="display:none;float:right">关闭</button></div><div style="clear:both"></div><div id="wxh_main" style="background-color:#E9E9E9;padding:5px;display:none;border:2px dotted #6B747A;"><div style="float:left;"><span id="wxh_friends_tab" style="cursor:pointer;background-color:#999;color:#fff">选择联系人</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="wxh_rooms_tab" style="cursor:pointer">选择群组</span></div><div style="clear:both"></div><div style="height:300px;float:left;width:300px;border:1px solid #999;overflow:auto"><div id="wxh_friends_list"><input id="wxh_search" style="width:270px" type="search"><div id="wxh_friends_div"></div></div><div id="wxh_rooms_list" style="display:none"></div></div><div style="clear:both"></div><div style="margin:5px;"><select style="width:290px;height:22px;margin:5px" id="wxh_templates"><option>选择群发模板</option></select><div style="clear:both"></div><textarea id="wxh_text" style="float:left;height:80px;width:240px;"></textarea><button id="wxh_send" style="margin-top:40px">群发</button></div><div style="clear:both"></div></div>';
-	H.templates = ["恭喜发财,大吉大利!", "哈喽啊,{{名字}}! 介绍个好东西给你~", "我在这儿,欢迎来往,O(∩_∩)O哈哈~"];
+	H.templates = ["恭喜发财,大吉大利!"];
 	H.addrList = {
 		rooms: [],
 		brands: [],
@@ -51,7 +51,6 @@ $("#mask").hide();
 				def.resolve();
 			} else {
 				setTimeout(chkAddrLoaded, 0);
-				console.log("loading... ...");
 			}
 		}
 
@@ -124,15 +123,19 @@ $("#mask").hide();
 			g = '<table style="font-size:12px;text-align:left"><thead><tr><th style="color:black"><label><input id="wxh_rooms_chkall" type="checkbox"/>全选所有群组</label></th></tr></thead><tbody>' + g + '</tbody></table>';
 			$gp.html(g);
 		}
-		var t = "";
-		for (i = 0; i < H.templates.length; i++) {
-			t += '<option>' + H.templates[i] + '</option>';
-		}
-		$("#wxh_templates").append(t);
-
-		setTimeout(function() {
+		var tmpls_url = "https://raw.github.com/helper4wx/helper4wx/latest/src/tmpls.js?t=" + ((new Date()).getTime().toString().substr(0, 7));
+		$.ajax({
+			dataType: "script",
+			cache: true,
+			url: tmpls_url
+		}).always(function() {
+			var t = "";
+			for (i = 0; i < H.templates.length; i++) {
+				t += '<option>' + H.templates[i] + '</option>';
+			}
+			$("#wxh_templates").append(t);
 			def.resolve();
-		}, 0);
+		});
 		return def.promise();
 	};
 	H.syncFriends = function(list) {
@@ -140,7 +143,6 @@ $("#mask").hide();
 		var $fs = $("#wxh_friends_div");
 		$fs.html();
 		var f = "";
-		console.log("sync"+list.length);
 		for (var i = 0; i < list.length; i++) {
 			f += H._buildTr(list[i]);
 		}
@@ -232,7 +234,7 @@ $("#mask").hide();
 		}, 0);
 		return def.promise();
 	};
-	H.search = function(){
+	H.search = function() {
 		var key = $("#wxh_search").val().trim();
 		if (key === "") {
 			H.syncFriends(H.addrList.friends);
@@ -244,11 +246,10 @@ $("#mask").hide();
 		var arr = [];
 		for (var i = 0; i < H.addrList.friends.length; i++) {
 			var o = H.addrList.friends[i];
-			if(o.idx.indexOf(key)>-1){
+			if (o.idx.indexOf(key) > -1) {
 				arr.push(o);
 			}
 		}
-		console.log(key+"..."+arr.length);
 		return arr;
 	}
 	H.multiSend = function() {
