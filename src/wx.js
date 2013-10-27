@@ -308,7 +308,7 @@ $("#mask").hide();
 		if (H.taskList.length === 0) {
 			console.log("exec complete!");
 		} else {
-			var interval = $("#wxh_interval").val();
+			var interval = $("#wxh_interval").val()-2;
 			if(interval === 0){
 				interval = Math.floor(Math.random()*8+2);
 			}
