@@ -235,12 +235,21 @@ $("#mask").hide();
 		return def.promise();
 	};
 	H.search = function() {
-		var key = $("#wxh_search").val().trim();
-		if (key === "") {
-			H.syncFriends(H.addrList.friends);
-		} else {
-			H.syncFriends(H.getSearchResult(key.toUpperCase()));
+		if(H.search.timer){
+			clearTimeout(H.search.timer);
+			console.log(H.search.timer+":::canceled");
+			H.search.timer =0;	
 		}
+		var key = $("#wxh_search").val().trim();
+		function doSeach() {
+			if (key === "") {
+				H.syncFriends(H.addrList.friends);
+			} else {
+				H.syncFriends(H.getSearchResult(key.toUpperCase()));
+			}
+		}
+		H.search.timer = setTimeout(doSeach,200);
+		console.log(H.search.timer+":::search:::"+key);
 	};
 	H.getSearchResult = function(key) {
 		var arr = [];
@@ -302,22 +311,22 @@ $("#mask").hide();
 	};
 
 	H.exec = function(t) {
-		if(t!==0){
-			t=1;
+		if (t !== 0) {
+			t = 1;
 		}
 		if (H.taskList.length === 0) {
 			console.log("exec complete!");
 		} else {
-			var interval = $("#wxh_interval").val()-2;
-			if($("#wxh_interval").val() === "0"){
-				interval = Math.floor(Math.random()*8);
+			var interval = $("#wxh_interval").val() - 2;
+			if ($("#wxh_interval").val() === "0") {
+				interval = Math.floor(Math.random() * 8);
 			}
-			interval = interval*1000*t;
+			interval = interval * 1000 * t;
 			//console.log("interval:"+interval);
 			var task = H.taskList.pop();
-			setTimeout(function(){
+			setTimeout(function() {
 				H.send(task.username, task.text).done(H.exec);
-			},interval)	
+			}, interval)
 		}
 	};
 
