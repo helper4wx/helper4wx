@@ -58,7 +58,9 @@ $("#mask").hide();
 			//var sets = $("#contactListContainer div.groupDetail").toArray();
 			for (var key in _oContacts) {
 				var o = _oContacts[key];
-				if (o.isRoomContact()) {
+				if(o.isFileHelper()||o.isSpContact()||o.isNewsApp()||o.isRecommendHelper()){
+					console.log("ignore : "+o.DisplayName);
+				} else if (o.isRoomContact()) {
 					H.addrList.rooms.push(o);
 				} else if (o.isBrandContact()) {
 					H.addrList.brands.push(o);
