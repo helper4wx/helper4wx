@@ -5,7 +5,7 @@ $("#wx_helper_box").remove();
 $("#mask").hide();
 
 (function(H, $) {
-	H.boxHTML = '<div><button id="wxh_show" style="float:left">群发助手</button><button id="wxh_hide" style="display:none;float:right">关闭</button></div><div style="clear:both"></div><div id="wxh_main" style="background-color:#E9E9E9;padding:5px;display:none;border:2px dotted #6B747A;"><div style="float:left;"><span id="wxh_friends_tab" style="cursor:pointer;background-color:#999;color:#fff">选择联系人</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="wxh_rooms_tab" style="cursor:pointer">选择群组</span></div><div style="clear:both"></div><div style="height:300px;float:left;width:300px;border:1px solid #999;overflow:auto"><div id="wxh_friends_list"><input id="wxh_search" style="width:270px" type="search"><div id="wxh_friends_div"></div></div><div id="wxh_rooms_list" style="display:none"></div></div><div style="clear:both"></div><div style="margin:5px;"><select style="width:290px;height:22px;margin:5px" id="wxh_templates"><option>选择群发模板</option></select><div style="clear:both"></div><textarea id="wxh_text" style="float:left;height:80px;width:240px;"></textarea><button id="wxh_send" style="margin-top:40px">群发</button></div><div style="clear:both"></div></div>';
+	H.boxHTML = '<div><button id="wxh_show" style="float:left">群发助手</button><button id="wxh_hide" style="display:none;float:right">关闭</button></div><div style="clear:both"></div><div id="wxh_main" style="background-color:#E9E9E9;padding:5px;display:none;border:2px dotted #6B747A;"><div style="float:left;"><span id="wxh_friends_tab" style="cursor:pointer;background-color:#999;color:#fff">选择联系人</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="wxh_rooms_tab" style="cursor:pointer">选择群组</span></div><div style="clear:both"></div><div style="height:300px;float:left;width:300px;border:1px solid #999;overflow:auto"><div id="wxh_friends_list"><input id="wxh_search" style="width:270px" type="search"><div id="wxh_friends_div"></div></div><div id="wxh_rooms_list" style="display:none"></div></div><div style="clear:both"></div><div style="margin:5px;"><select style="width:290px;height:22px;margin:5px" id="wxh_templates"><option>选择群发模板</option></select><div style="clear:both"></div><textarea id="wxh_text" style="float:left;height:80px;width:200px;"></textarea><select id="wxh_interval" style="width:75px"><option value="2">发送间隔</option><option value="0">10秒内随机</option><option value="2">2秒</option><option value="3">3秒</option><option value="5">5秒</option><option value="8">8秒</option><option value="15">15秒</option></select><button id="wxh_send" style="margin-top:40px">群发</button></div><div style="clear:both"></div></div>';
 	H.templates = ["恭喜发财,大吉大利!"];
 	H.addrList = {
 		rooms: [],
@@ -293,7 +293,7 @@ $("#mask").hide();
 				$("#wxh_main").hide(200);
 				$("#mask").hide();
 				$("#wxh_hide").hide();
-				H.exec();
+				H.exec(0);
 			} else {
 				H.taskList = [];
 			}
@@ -301,12 +301,23 @@ $("#mask").hide();
 		}
 	};
 
-	H.exec = function() {
+	H.exec = function(t) {
+		if(t!==0){
+			t=1;
+		}
 		if (H.taskList.length === 0) {
 			console.log("exec complete!");
 		} else {
+			var interval = $("#wxh_interval").val()-2;
+			if($("#wxh_interval").val() === "0"){
+				interval = Math.floor(Math.random()*8);
+			}
+			interval = interval*1000*t;
+			//console.log("interval:"+interval);
 			var task = H.taskList.pop();
-			H.send(task.username, task.text).done(H.exec);
+			setTimeout(function(){
+				H.send(task.username, task.text).done(H.exec);
+			},interval)	
 		}
 	};
 
